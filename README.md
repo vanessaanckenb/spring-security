@@ -5,7 +5,7 @@
 autenticacao em  web = stateful = toda vez que um user faz login o servidor guarda o estado, cria sessões (espaços em memoria) e consegue identificar nas proxs requisicoes o ususario.
 autenticacao em API Rest = stateless = não guarda estado = faz uma requisição -> recebe resposta -> fim, a proxima requisição é uma nova requisição, o servidor não sabe quem você, não tem dados armazenados em memoria. Estrategia: tokens (como jwt - json web tokens)
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 Hashing 
 função matemática que converte um texto em outro texto totalmente diferente e de difícil dedução.
@@ -22,8 +22,11 @@ Spring Security já nos fornece uma classe que implementa o Bcrypt
 
 TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
 
+<br/><br/>
 
 1-) Adicionar as dependencias do spring security:
+
+<br/>
 
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -35,6 +38,8 @@ TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
     <scope>test</scope>
 </dependency>
 
+<br/>
+
 A principio eu tinha apenas o controller de Product e tudo que envolve seu crud, as requisições estavam publicas, funcionando normalmente sem qualquer tipo de segurança.
 Para deixar a api com autenticação e autorização o spring fornece bibliotecas prontas para isso.
 Adicionar as dependencias do Spring Security no pom.xml
@@ -43,12 +48,16 @@ Depois de adicionar essas dependencias, ao iniciar a aplicação, o spring faz u
 	bloqueia todas as requisições
 a senha muda sempre que executamos novamente o aplicativo, se quisermos mudar esse comportamento e tornar a senha estática, podemos adicionar a seguinte configuração ao nosso application.propertiesarquivo: spring.security.user.password=1234
 
+<br/>
+
 Agora, os enpoints que eram públicos, já não são mais, ao entrar no localhost:8080/products, que antes das dependencias funcionava, agora já não funciona mais, é retornado um 401 Unauthorized.
+
+<br/>
 
 Se for uma aplicação web, basta colocar o endereço no browser, ao tentar acessar o spring cria automaticamente uma tela de login e senha, basta colocar o usuario user e o password gerado.
 Esse projeto é de uma aplicação rest, stateless, não de uma aplicação web que guarda sessão (stateful), então precisamos mudar a configuração padrão e mudarmos para stateless.
 
-
+<br/><br/><br/>
 
 
 2-) Configurar que não queremos o processo de autenticação padrão do spring que abre a tela de login (statefull)
@@ -78,8 +87,7 @@ Pronto, agora as chamadas serão stateless e as requisições estão publicas no
 Se você digitar localhost:8080/products no browser, a tela de login não aparece mais e ja obtemos a resposta da api.
 Queriamos que as requisições fossem stateless, ok, mas não queriamos que qualquer um pudesse acessar os endpoints sem autenticação e autorização, então vamos fazer essas configurações.
 
-
-
+<br/><br/><br/>
 
 4-) Configurar que queremos ter autenticação nas chamadas
 na mesma classe de configuração que criamos acima, no mesmo método, devemos adicionar:
@@ -131,8 +139,7 @@ https://docs.spring.io/spring-security/reference/servlet/authorization/method-se
 
 Agora que esta tudo bloqueado, esperando uma autenticação e autorização, eu preciso criar tudo que envolve autenticação e autorização para liberar esses endpoints, como criação de users, criar um endpoint para fazer o cadastro e criar um endpoint para fazer o login
 
-
-
+<br/><br/><br/>
 
 5-) Criar todo o contexto de usuarios para registro e login
 Para que eu faça uma autenticação e autorização, eu preciso de todo um contexto de usuarios.
@@ -499,8 +506,7 @@ Depois que fizemos essa chamada, pegamos o token, devemos passar esse token no h
 Por enquanto ainda não fizemos essa configuração.
 Precisamos criar uma classe Filter, responsável por interceptar as requisições e realizar o processo de autenticação e autorização.
 
-
-
+<br/><br/><br/>
 
 7-) Criar um filter para interceptar as requisições e validar os tokens antes da requisição de cair no controller
 @Component
