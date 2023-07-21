@@ -18,9 +18,9 @@ Argon2 <br/>
 PBKDF2 <br/>
 Spring Security já nos fornece uma classe que implementa o Bcrypt
 
-<br/><br/><br/><br/>
+<br/><br/><br/>
 
-TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
+<h2>TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO</h2>
 
 <br/><br/>
 
@@ -28,6 +28,7 @@ TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
 
 <br/>
 
+```
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -37,6 +38,7 @@ TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
     <artifactId>spring-security-test</artifactId>
     <scope>test</scope>
 </dependency>
+```
 
 <br/>
 
