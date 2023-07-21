@@ -1,32 +1,8 @@
 # spring-security tutorial
 
- <br/><br/>
-  
-autenticacao em  web = stateful = toda vez que um user faz login o servidor guarda o estado, cria sessões (espaços em memoria) e consegue identificar nas proxs requisicoes o ususario.
-autenticacao em API Rest = stateless = não guarda estado = faz uma requisição -> recebe resposta -> fim, a proxima requisição é uma nova requisição, o servidor não sabe quem você, não tem dados armazenados em memoria. Estrategia: tokens (como jwt - json web tokens)
-
-<br/><br/>
-
-Hashing 
-função matemática que converte um texto em outro texto totalmente diferente e de difícil dedução.
-Os algoritmos de hashing devem ser de mão única, ou seja, não deve ser possível obter o texto original a partir de um hash, devemos pegar a senha que foi digitada por ele e gerar o hash dela, para então realizar a comparação com o hash que está armazenado no banco de dados
-Existem diversos algoritmos de hashing  que podem ser utilizados para fazer essa transformação nas senhas dos usuários, sendo que alguns são mais antigos e não mais considerados seguros hoje em dia, como o MD5 e o SHA1. <br/>
-Os principais algoritmos recomendados atualmente são: <br/>
-Bcrypt <br/>
-Scrypt <br/>
-Argon2 <br/>
-PBKDF2 <br/>
-Spring Security já nos fornece uma classe que implementa o Bcrypt
-
-<br/><br/><br/>
-
-<h2>TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO</h2>
-
-<br/><br/>
+ <br/>
 
 1-) Adicionar as dependencias do spring security:
-
-<br/>
 
 ```
 <dependency>
@@ -42,12 +18,17 @@ Spring Security já nos fornece uma classe que implementa o Bcrypt
 
 <br/>
 
-A principio eu tinha apenas o controller de Product e tudo que envolve seu crud, as requisições estavam publicas, funcionando normalmente sem qualquer tipo de segurança.
+A principio o projeto tinha apenas o controller de Product e tudo que envolve seu CRUD, as requisições estavam publicas, funcionando normalmente sem qualquer tipo de segurança.
+<br/>
 Para deixar a api com autenticação e autorização o spring fornece bibliotecas prontas para isso.
-Adicionar as dependencias do Spring Security no pom.xml
+<br/>
+Adicionar as dependencias do Spring Security no pom.xml.
+<br/>
 Depois de adicionar essas dependencias, ao iniciar a aplicação, o spring faz uma configuração padrão:
-	cria um user e uma senha (é gerado um token e printado no console junto a inicialização do spring, como exemplo de token: 8efaa0b9-0507-4c6b-aad3-a5d5d344ca13, o username é user por padrão)
-	bloqueia todas as requisições
+<br/>
+- cria um user e uma senha (é gerado um token e printado no console junto a inicialização do spring, como exemplo de token: 8efaa0b9-0507-4c6b-aad3-a5d5d344ca13, o username é user por padrão)
+- bloqueia todas as requisições
+<br/>
 a senha muda sempre que executamos novamente o aplicativo, se quisermos mudar esse comportamento e tornar a senha estática, podemos adicionar a seguinte configuração ao nosso application.propertiesarquivo: spring.security.user.password=1234
 
 <br/>
@@ -59,7 +40,7 @@ Agora, os enpoints que eram públicos, já não são mais, ao entrar no localhos
 Se for uma aplicação web, basta colocar o endereço no browser, ao tentar acessar o spring cria automaticamente uma tela de login e senha, basta colocar o usuario user e o password gerado.
 Esse projeto é de uma aplicação rest, stateless, não de uma aplicação web que guarda sessão (stateful), então precisamos mudar a configuração padrão e mudarmos para stateless.
 
-<br/><br/><br/>
+<br/><br/>
 
 
 2-) Configurar que não queremos o processo de autenticação padrão do spring que abre a tela de login (statefull)
@@ -69,6 +50,7 @@ Para isso:
 2.3-) a classe deve ter a anotação @EnableWebSecurity
 2.4-) deve ter um bean (@Bean) que faça essa configuração
 
+```
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -79,6 +61,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
 }
+```
 
 - @EnableWebSecurity = indica ao spring que vamos personalizar as configurações de segurança
 - @Bean = serve para exportar uma classe para o spring, fazendo com que ele consiga carrega-la e realize sua injecao de dependencia em outras classes. Para que o spring consiga instanciar a nossa classe.
@@ -89,11 +72,12 @@ Pronto, agora as chamadas serão stateless e as requisições estão publicas no
 Se você digitar localhost:8080/products no browser, a tela de login não aparece mais e ja obtemos a resposta da api.
 Queriamos que as requisições fossem stateless, ok, mas não queriamos que qualquer um pudesse acessar os endpoints sem autenticação e autorização, então vamos fazer essas configurações.
 
-<br/><br/><br/>
+<br/><br/>
 
 4-) Configurar que queremos ter autenticação nas chamadas
 na mesma classe de configuração que criamos acima, no mesmo método, devemos adicionar:
 
+```
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	return http
@@ -109,6 +93,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 		)
 		.build();
 }
+```
 
 - authorizeHttpRequests definimos quais endpoints queremos que tenha autorização ou não
 - .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN") aqui dizemos que somente o usuario que tiver a role ADMIN pode acessar esse endpoint com o método POST
@@ -123,12 +108,14 @@ para os metodos post, put e delete em procuts, exigi que o user tenha a role de 
 //
 Outra maneira de restringir o acesso a determinadas funcionalidades, com base no perfil dos usuários, é com a utilização de um recurso do Spring Security conhecido como Method Security, que funciona com a utilização de anotações em métodos:
 
+```
 @GetMapping("/{id}")
 @Secured("ROLE_ADMIN")
 public ResponseEntity detalhar(@PathVariable Long id) {
     var medico = repository.getReferenceById(id);
     return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
 }
+```
 
 No exemplo de código anterior o método foi anotado com @Secured("ROLE_ADMIN"), para que apenas usuários com o perfil ADMIN possam disparar requisições para detalhar um médico. A anotação @Secured pode ser adicionada em métodos individuais ou mesmo na classe, que seria o equivalente a adicioná-la em todos os métodos.
 
@@ -141,12 +128,13 @@ https://docs.spring.io/spring-security/reference/servlet/authorization/method-se
 
 Agora que esta tudo bloqueado, esperando uma autenticação e autorização, eu preciso criar tudo que envolve autenticação e autorização para liberar esses endpoints, como criação de users, criar um endpoint para fazer o cadastro e criar um endpoint para fazer o login
 
-<br/><br/><br/>
+<br/><br/>
 
 5-) Criar todo o contexto de usuarios para registro e login
 Para que eu faça uma autenticação e autorização, eu preciso de todo um contexto de usuarios.
 5.1) Criar uma tabela de usuarios que tenha login, senha e a role
 
+```
 create table users(
     id varchar(100) not null unique,
     login varchar(100) not null unique,
@@ -154,9 +142,11 @@ create table users(
     role varchar(20) not null,
     primary key(id)
 );
-
+```
 
 5.2-) criar uma entidade de usuario
+
+```
 @Table(name = "users")
 @Entity(name = "User")
 @Data
@@ -172,9 +162,11 @@ public class User {
     private String password;
     private UserRole role;
 }
-
+```
 
 5.3-) a entidade usuario deve implementar de UserDetails e sobreescrever seus metodos
+
+```
 @Table(name = "users")
 @Entity(name = "User")
 @Data
@@ -223,6 +215,8 @@ public class User implements UserDetails {
         return true;
     }
 }
+```
+
 A implementação correta de UserDetails garante que o Spring Security possa autenticar os usuários adequadamente, verificar suas autoridades e aplicar as regras de autorização definidas em seu aplicativo.
 os metodos de sobreescrita obrigatorios ja configuram se o usuario esta ativo, se a credencial expira, se a conta é bloqueavel ou expiravel, você ja passa seu login e já configura as roles tambem.
 
@@ -231,12 +225,17 @@ Quando o usuário tenta fazer login, o Spring Security usará essa classe para a
 
 
 5.4-) criar o repository
+
+```
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 }
+```
 
 5.5-) criar um controller para registrar os usuarios
 lembrando que a senha deve ser salva em Bcrypt
+
+```
 @AllArgsConstructor
 @RestController
 @RequestMapping("/users")
@@ -251,16 +250,19 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 }
-
+```
 
 5.6- agora que já adicionamos o user, o user deve enviar o email e senha
 se forem corretos, receberão um token, que deve ser passado no header de cada requisição para se manter autorizado
 no repository adicionar o metodo findByLogin que retorne um UserDetails
 o spring vai fazer essa consulta para validação do usuario
+
+```
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     UserDetails findByLogin(String login);
 }
+```
 
 
 5.7-) criar uma implementação do UserDetailsService, ou seja, uma classe que implemente o UserDetailsService
@@ -270,6 +272,8 @@ mas ele nao sabe que criamos uma tabela de user no banco de dados, ou buscamos o
 aqui faremos a consulta dos nossos users pro spring security (nao importa se é no banco, chamando outra api...)
 ate entao nos criamos toda a estrutura para salvarmos nosso user, mas ele nem precisaria estar salvo aqui, poderia ter sido de outro lugar
 essa classe de fato vai buscar as infos do user, seja de onde for, e pegar os dados de necessarios para autenticação.
+
+```
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -281,9 +285,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return repository.findByLogin(username);
     }
 }
-
+```
 
 5.8-) Configurar a autenticação que chama o UserDetailsService por debaixo dos panos
+
+```
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -315,6 +321,7 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder();
     }
 }
+```
 
 - configurar o bean authenticationManager para injeção de dependencia do AuthenticationManager no controller
 que chama o UserDetailsService por debaixo dos panos
@@ -323,6 +330,8 @@ no caso guardamos no banco de dados
 por isso antes criamos o metodo findByLogin no repositorio
 ao adicionarmos o metodo authenticationManager, todos os endpoints precisariam de autenticacao
 mesmo sem essa config no metodo acima
+
+```
 .authorizeHttpRequests(
 	authorize -> authorize
 		.requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
@@ -332,6 +341,8 @@ mesmo sem essa config no metodo acima
 		.requestMatchers(HttpMethod.POST, "/users/login").permitAll()
 		.anyRequest().authenticated()
 	).build();
+```
+
 podemos ate adicionar essa autenticação por ultimo
 para dizer qual realmente queremos autenticar, com qual role, qual queremos permitir...
 - passwordEncoder
@@ -343,6 +354,8 @@ para dizer qual realmente queremos autenticar, com qual role, qual queremos perm
 
 
 5.9-) criar controller para user fazer a autenticação (para validar se nossos users estao autenticados)
+
+```
 @RestController
 @RequestMapping("/login")
 public class AuthenticationController {
@@ -357,6 +370,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 }
+```
 
 - AuthenticationManager = primeiro injetamos o AuthenticationManager
 só conseguimos injetar ele porque no passo anterior condiguramos o seu bean
@@ -382,14 +396,17 @@ agora o proximo passo é: se a validação estiver ok, retornar para o user um t
 6-) configurar token para retorno após validação
 6.1) colocar a dependencia do auth jwt no pom
 
+```
 <dependency>
 	<groupId>com.auth0</groupId>
 	<artifactId>java-jwt</artifactId>
 	<version>4.4.0</version>
 </dependency>
-
+```
 
 6.2) criar classe TokenService com um metodo responsavel pela geração dos tokens e um metodo que valide o token
+
+```
 @Service
 public class TokenService {
 
@@ -415,6 +432,7 @@ public class TokenService {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }
+```
 
 -Algorithm.HMAC256("SuaSenhaUnicaQueVaiGerarOHash") = senha secreta para fazer a assinatura do token
 	não é boa pratica passar senha em texto dentro do codigo
@@ -434,6 +452,8 @@ para ler uma var de ambiente, usar ${}
 
 
 6.3) chamar o metodo da classe TokenService no controller
+
+```
 @AllArgsConstructor
 @RestController
 @RequestMapping("/users")
@@ -458,11 +478,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JwtDTO(jtwToken));
     }
 }
+```
 
 Agora, ao fazer login, você recebera um token de autenticação para usar nas proximas chamadas
 precisamos de um método para validar esse token
 
 6.4) criar método que valide o token
+
+```
 @Service
 public class TokenService {
 
@@ -500,7 +523,7 @@ public class TokenService {
     }
 
 }
-
+```
 
 Ao fazer uma chamada, a requisição passa pelos filtros e servlets e cai no controller. 
 A requisição de login esta com permitAll(), entao não precisa de autenticação.
@@ -508,9 +531,11 @@ Depois que fizemos essa chamada, pegamos o token, devemos passar esse token no h
 Por enquanto ainda não fizemos essa configuração.
 Precisamos criar uma classe Filter, responsável por interceptar as requisições e realizar o processo de autenticação e autorização.
 
-<br/><br/><br/>
+<br/><br/>
 
 7-) Criar um filter para interceptar as requisições e validar os tokens antes da requisição de cair no controller
+
+```
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
@@ -544,9 +569,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         return null;
     }
 }
+```
 
-
-
+7.1) Adicionar o filtro antes de tudo
+```
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -576,3 +602,4 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder();
     }
 }
+```
