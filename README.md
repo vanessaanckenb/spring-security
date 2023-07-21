@@ -1,12 +1,11 @@
-# spring-security
-Spring security tutorial
+# spring-security tutorial
 
-
+ <br/><br/>
+  
 autenticacao em  web = stateful = toda vez que um user faz login o servidor guarda o estado, cria sessões (espaços em memoria) e consegue identificar nas proxs requisicoes o ususario.
 autenticacao em API Rest = stateless = não guarda estado = faz uma requisição -> recebe resposta -> fim, a proxima requisição é uma nova requisição, o servidor não sabe quem você, não tem dados armazenados em memoria. Estrategia: tokens (como jwt - json web tokens)
 
-
-
+<br/><br/><br/><br/>
 
 Hashing 
 função matemática que converte um texto em outro texto totalmente diferente e de difícil dedução.
@@ -19,8 +18,7 @@ Argon2 <br/>
 PBKDF2 <br/>
 Spring Security já nos fornece uma classe que implementa o Bcrypt
 
-
-
+<br/><br/><br/><br/>
 
 TUTORIAL AUTENTICAÇÃO E AUTORIZAÇÃO
 
