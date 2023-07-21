@@ -11,12 +11,12 @@ autenticacao em API Rest = stateless = não guarda estado = faz uma requisição
 Hashing 
 função matemática que converte um texto em outro texto totalmente diferente e de difícil dedução.
 Os algoritmos de hashing devem ser de mão única, ou seja, não deve ser possível obter o texto original a partir de um hash, devemos pegar a senha que foi digitada por ele e gerar o hash dela, para então realizar a comparação com o hash que está armazenado no banco de dados
-Existem diversos algoritmos de hashing  que podem ser utilizados para fazer essa transformação nas senhas dos usuários, sendo que alguns são mais antigos e não mais considerados seguros hoje em dia, como o MD5 e o SHA1. 
-Os principais algoritmos recomendados atualmente são:
-Bcrypt
-Scrypt
-Argon2
-PBKDF2
+Existem diversos algoritmos de hashing  que podem ser utilizados para fazer essa transformação nas senhas dos usuários, sendo que alguns são mais antigos e não mais considerados seguros hoje em dia, como o MD5 e o SHA1. <br/>
+Os principais algoritmos recomendados atualmente são: <br/>
+Bcrypt <br/>
+Scrypt <br/>
+Argon2 <br/>
+PBKDF2 <br/>
 Spring Security já nos fornece uma classe que implementa o Bcrypt
 
 
