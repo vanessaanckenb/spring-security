@@ -105,7 +105,8 @@ Pronto, agora bloqueamos todos nossos endpoints, menos o /users/register e o /us
 nao criamos esses controlers ainda, mas ja sei que quero cria-los em breve
 para os metodos post, put e delete em procuts, exigi que o user tenha a role de ADMIN
 
-//
+<br/>
+
 Outra maneira de restringir o acesso a determinadas funcionalidades, com base no perfil dos usuários, é com a utilização de um recurso do Spring Security conhecido como Method Security, que funciona com a utilização de anotações em métodos:
 
 ```
@@ -124,7 +125,8 @@ Por padrão esse recurso vem desabilitado no spring Security, sendo que para o u
 
 Para saber mais:
 https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
-\\
+
+<br/>
 
 Agora que esta tudo bloqueado, esperando uma autenticação e autorização, eu preciso criar tudo que envolve autenticação e autorização para liberar esses endpoints, como criação de users, criar um endpoint para fazer o cadastro e criar um endpoint para fazer o login
 
