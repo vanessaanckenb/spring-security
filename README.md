@@ -2,17 +2,8 @@
 Spring security tutorial
 
 
-autenticacao em 
-	web
-		stateful
-			toda vez que um user faz login o servidor guarda o estado, cria sessões (espaços em memoria) e consegue identificar nas proxs requisicoes o ususario.
-	API Rest
-		stateless
-			não guarda estado
-			faz uma requisição -> recebe resposta -> fim
-			a proxima requisição é uma nova requisição, o servidor não sabe quem você
-			não tem dados armazenados em memoria
-			estrategia: tokens (como jwt - json web tokens)
+autenticacao em  web = stateful = toda vez que um user faz login o servidor guarda o estado, cria sessões (espaços em memoria) e consegue identificar nas proxs requisicoes o ususario.
+autenticacao em API Rest = stateless = não guarda estado = faz uma requisição -> recebe resposta -> fim, a proxima requisição é uma nova requisição, o servidor não sabe quem você, não tem dados armazenados em memoria. Estrategia: tokens (como jwt - json web tokens)
 
 
 
