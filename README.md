@@ -605,3 +605,5 @@ public class SecurityConfigurations {
     }
 }
 ```
+
+E para finalizar, tratei algumas exceções e status code no ExceptionsHanlder.
