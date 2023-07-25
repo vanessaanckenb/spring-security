@@ -29,9 +29,10 @@ Depois de adicionar essas dependencias, ao iniciar a aplicação, o spring faz u
 - cria um user e uma senha (é gerado um token e printado no console junto a inicialização do spring, como exemplo de token: 8efaa0b9-0507-4c6b-aad3-a5d5d344ca13, o username é user por padrão)
 - bloqueia todas as requisições
 <br/>
-a senha muda sempre que executamos novamente o aplicativo, se quisermos mudar esse comportamento e tornar a senha estática, podemos adicionar a seguinte configuração ao nosso application.propertiesarquivo: spring.security.user.password=1234
+a senha muda sempre que executamos novamente o aplicativo, se quisermos mudar esse comportamento e tornar a senha estática, podemos adicionar a seguinte configuração ao nosso application.properties:
+spring.security.user.password=1234
 
-<br/>
+<br/><br/>
 
 Agora, os enpoints que eram públicos, já não são mais, ao entrar no localhost:8080/products, que antes das dependencias funcionava, agora já não funciona mais, é retornado um 401 Unauthorized.
 
